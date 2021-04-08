@@ -72,19 +72,12 @@
                 this.$router.replace({path: '/'})
               }
             } else{
-
-              //console.log("fffffffffffffff");
-              //console.log("ddddddddd",resp.data);
               this.check_login();
-              //alert('login error')
             }
           })
           .catch(error => {
             console.log(error)
-
-            //console.log("xxxxxxxxxxxxxxx");
             this.check_login();
-            //alert('login error')
           })
       },
 
