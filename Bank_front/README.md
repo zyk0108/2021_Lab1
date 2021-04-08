@@ -1,4 +1,4 @@
-# bank_front
+# Bank_front
 
 > A Vue.js project
 
