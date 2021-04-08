@@ -1,9 +1,7 @@
 package com.example.test.Entity;
 
-public class User {
-    //@JsonProperty("username")
+public class LoginRequest {
     private String username;
-    //@JsonProperty("password")
     private String password;
 
     public String getUsername() {

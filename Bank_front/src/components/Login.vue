@@ -1,6 +1,5 @@
 <template>
   <div id="base_login">
-
     <el-form :model="loginForm"
              :rules="rules"
              class="login_container"
@@ -62,15 +61,14 @@
           password: this.loginForm.password
         })
           .then(resp => {
+            console.log(resp.status)
             if (resp.status === 200 && resp.data.hasOwnProperty("token")) {
               this.$store.commit('login', resp.data)
+              console.log(this.$router)
+              //跳转相应的页面
+              localStorage.setItem("username",this.loginForm.username)
+              this.$router.replace({path: '/transaction'})
 
-              //当为管理员时跳转到审核界面
-              if(resp.data.userDetails.role=='admin'){
-                this.$router.replace({path: '/conferenceAudit'})
-              }else {
-                this.$router.replace({path: '/'})
-              }
             } else{
               this.check_login();
             }
@@ -92,6 +90,7 @@
           }
         });
       }
+
     }
   }
 </script>

@@ -1,8 +1,7 @@
 package com.example.test.Controller;
 
 import com.example.test.Entity.Config;
-import com.example.test.Entity.Result;
-import com.example.test.Entity.User;
+import com.example.test.Entity.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -24,25 +23,31 @@ public class RemoteController {
         this.restTemplate = restTemplate;
     }
 
-    @RequestMapping("/hello1")
-    public ResponseEntity<?> get(@RequestParam("username")String name, @RequestParam("password")String password){
+    //实现登录功能
+    @RequestMapping("/login")
+    public ResponseEntity<?> get(@RequestBody LoginRequest loginRequest){
+        String username=loginRequest.getUsername();
+        String password=loginRequest.getPassword();
         //设置请求头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        //封装参数，千万不要替换为Map与HashMap，否则参数无法传递
+        //封装参数，不要替换为Map与HashMap，否则参数无法传递
         MultiValueMap<String, String> params= new LinkedMultiValueMap<>();
         //添加请求的参数
-        params.add("username", name);             //必传
+        params.add("username", username);  //必传
         params.add("password", password);
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params,headers);
         ResponseEntity<String>responseEntity=this.restTemplate.exchange(
-                Config.BANK_URL,HttpMethod.POST,entity,String.class
+                Config.BANK_LOGIN_URL,HttpMethod.POST,entity,String.class
         );
         if (responseEntity.getStatusCode()==HttpStatus.OK){
             return responseEntity;
         }
         return null;
     }
+
+
+
 
     /*
     *//**
@@ -51,10 +56,10 @@ public class RemoteController {
      * @return
      *//*
     @RequestMapping("/find-user-id/{id}")
-    public User findOne(@PathVariable Long id) {
-        ResponseEntity<User> resultResponseEntity = this.restTemplate.exchange(
+    public LoginRequest findOne(@PathVariable Long id) {
+        ResponseEntity<LoginRequest> resultResponseEntity = this.restTemplate.exchange(
                 String.format("http://xxx.xxx.xxx.xxx/user/find-id/%s", id),
-                HttpMethod.GET, null, User.class);
+                HttpMethod.GET, null, LoginRequest.class);
         if (resultResponseEntity.getStatusCode() == HttpStatus.OK) {
             return resultResponseEntity.getBody();
         }
@@ -69,8 +74,8 @@ public class RemoteController {
      * @return
      *//*
     @RequestMapping("/add-user")
-    public Result addUser(@RequestBody User userEntity) {
-        HttpEntity<User> entity = new HttpEntity<>(userEntity);
+    public Result addUser(@RequestBody LoginRequest userEntity) {
+        HttpEntity<LoginRequest> entity = new HttpEntity<>(userEntity);
         ResponseEntity<Result> resultResponseEntity = this.restTemplate.exchange(
                 "http://xxx.xxx.xxx.xxx/user/add",
                 HttpMethod.POST, entity, Result.class);
