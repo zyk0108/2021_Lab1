@@ -1,6 +1,6 @@
 package com.example.test.Controller;
 
-import com.example.test.Entity.Person;
+import com.example.test.Entity.Record;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,9 +12,9 @@ public class Example {
     }
 
     @RequestMapping("/person")
-    public Person getInfo(){
+    public Record getInfo(){
 
-        return new Person();
+        return new Record();
     }
 
 

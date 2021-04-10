@@ -33,6 +33,9 @@
           <el-input v-model="buyForm.productNum" ></el-input>
         </el-form-item>
 
+        <el-form-item v-if="productTimeNeed" label="Product time" prop="productTime" required>
+          <el-input v-model="buyForm.productTime" ></el-input>
+        </el-form-item>
         <!--<el-form-item label="The time" required>
           <el-col :span="11">
             <el-date-picker type="date" placeholder="Select Date" v-model="buyForm.date" style="width: 100%;"></el-date-picker>
@@ -58,7 +61,6 @@
         </el-form-item>
       </el-form>
     </el-dialog>
-
 
 
     <el-container style="height: 100%; border: 1px solid #eee">
@@ -94,7 +96,7 @@
           <el-submenu index="4">
             <template slot="title"><i class="el-icon-menu"></i>理财产品</template>
             <el-menu-item-group>
-              <el-menu-item index="4-1" @click="searchAccountVisible = true">购买</el-menu-item>
+              <el-menu-item index="4-1" @click="searchAccountVisible = true">购买(盈亏）</el-menu-item>
               <el-menu-item index="4-2" @click="searchAccountVisible = true">查询</el-menu-item>
               <!--<el-menu-item index="4-1" @click="searchAccountVisible = true,form.account=null">购买</el-menu-item>
               <el-menu-item index="4-2" @click="searchAccountVisible = true,form.account=null">查询</el-menu-item>-->
@@ -119,28 +121,55 @@
         </el-header>
 
         <el-main>
-          <el-row :gutter="12">
-            <el-col :span="8" id="conferenceList_needAudit" v-for="product in productCanBuy" :key="product.id">
-              <el-card class="box-card" style="text-align: left;margin: 5px 0px">
-                <div slot="header" class="clearfix">
-                  <span>理财产品（可以购买）:</span>
-                </div>
-                <div class="text item">
-                  <el-card class="box-card" style="text-align: left;margin: 5px 0px">
-                    <div class="text item">
-                      <p>ProductName:{{product}}</p>
-                    </div>
-                  </el-card>
-                </div>
-                <div  class="clearfix">
-                  <div style="text-align: right; margin: 0">
-                    <el-button type="primary" size="mini" @click="getBuyForm(product)">购买此产品</el-button>
+          <div v-show="showBoughtButton" align="left">
+            <el-button type="primary" size="mini" @click="theBoughtShow()">查看此账号持仓情况及盈亏</el-button>
+            <el-button type="primary" size="mini" @click="canBuyButtonShow()">查看此账号可以购买产品</el-button>
+          </div>
+          <div v-show="showProductsCanBuy">
+            <el-row :gutter="12">
+              <el-col :span="8" id="conferenceList_needAudit" v-for="product in productCanBuy" :key="product.id">
+                <el-card class="box-card" style="text-align: left;margin: 5px 0px">
+                  <div slot="header" class="clearfix">
+                    <span>理财产品（可以购买）:</span>
                   </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
+                  <div class="text item">
+                    <el-card class="box-card" style="text-align: left;margin: 5px 0px">
+                      <div class="text item">
+                        <p>ProductName:{{product}}</p>
+                      </div>
+                    </el-card>
+                  </div>
+                  <div  class="clearfix">
+                    <div style="text-align: right; margin: 0">
+                      <el-button type="primary" size="mini" @click="getBuyForm(product)">购买此产品</el-button>
+                    </div>
+                  </div>
+                </el-card>
+              </el-col>
+            </el-row   >
+          </div>
+          <div v-show="showBoughtProductsDetail">
+            <el-table
+              :data="tableData"
+              style="width: 100%">
+              <el-table-column
+                prop="account"
+                label="账号"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="productName"
+                label="产品名称"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="balance"
+                label="盈亏状况">
+              </el-table-column>
+            </el-table>
+          </div>
         </el-main>
+
       </el-container>
     </el-container>
   </div>
@@ -172,6 +201,7 @@
 
         productId:'',//产品代号
         fine:'',//罚金的金额，不欠罚金为0
+        productTimeNeed:false,
         //购买产品表单
         buyForm: {
           account:'',//具体的账号
@@ -179,6 +209,7 @@
           productPrice:'',
           time:'',
           productNum:'',//购买的产品的数量，如股票数
+          productTime:0,
           active:'active'
         },
         buyFormRules:{
@@ -191,13 +222,20 @@
           ]
         },
 
+        //盈亏
+        tableData: [],
+
         //时间
-        //ddl
         pickerOptions: {
           disabledDate: (time) => {
             return time.getTime() < Date.now() - 8.64e7;
           }
         },
+
+        //显示可以购买的产品的卡片
+        showProductsCanBuy:false,
+        showBoughtButton:false,
+        showBoughtProductsDetail:false,//盈亏情况
 
         cashList: [],   //列表数组(现在是准备请求接口，不需要模拟的数据，所以设置一个空数组)
         topicList:[],
@@ -222,6 +260,52 @@
           if(response.status==200){
             //coding here...
 
+          }
+        }).catch((error) => {
+          console.log(error);
+          //invoke the function
+          this.failure();
+        });
+      },
+
+      //控制持仓button显示
+      theBoughtShow(){
+        this.showProductsCanBuy=false
+        this.checkData()
+        this.showBoughtProductsDetail=true
+      },
+
+      //控制可以买button显示
+      canBuyButtonShow(){
+        this.showProductsCanBuy=true;
+        this.showBoughtProductsDetail=false;
+      },
+
+      //查询盈亏
+      checkData(){
+        this.$axios.post('/checkData',{
+          account:this.form.account,
+          token: localStorage.getItem("token")
+        }).then((response) => {
+          //如果请求成功
+          if(response.status==200){
+            //将用户等级设置为返回的account
+            let len=response.data.length
+            console.log(len)
+
+            let balance=''
+            this.tableData=[]
+            for (let i = 0; i < len; i++) {
+              switch (response.data[i].condition) {
+                case 0:
+                  balance="亏损"
+                  break;
+                case 1:
+                  balance="盈利"
+              }
+              this.tableData.push({account: response.data[i].account, productName: response.data[i].theProduct, balance: balance});
+            }
+            console.log(response.data)
           }
         }).catch((error) => {
           console.log(error);
@@ -255,6 +339,8 @@
                 this.productCanBuy.push(this.products[2]);
             }
             this.searchAccountVisible = false
+            this.showProductsCanBuy=true
+            this.showBoughtButton=true
             console.log(response.data.grade)
             console.log(this.productCanBuy)
           }
@@ -271,12 +357,15 @@
       getBuyForm(theName){
         switch (theName) {
           case "股票":
+            this.productTimeNeed=false
             this.productId=1;
             break;
           case "基金":
+            this.productTimeNeed=true
             this.productId=2;
             break;
           case "定期":
+            this.productTimeNeed=true
             this.productId=3;
         }
         //price undefined ???

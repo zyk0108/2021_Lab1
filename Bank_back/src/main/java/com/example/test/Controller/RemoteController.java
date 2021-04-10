@@ -2,6 +2,8 @@ package com.example.test.Controller;
 
 import com.example.test.Entity.Config;
 import com.example.test.Entity.LoginRequest;
+import com.example.test.Entity.Record;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -9,7 +11,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 //允许跨域访问
@@ -55,7 +59,7 @@ public class RemoteController {
         HashMap<String, Object> result = new HashMap<>();
         //待完善......
 
-        result.put("grade",3);
+        result.put("grade",1);
         return ResponseEntity.ok(result);
     }
 
@@ -100,6 +104,25 @@ public class RemoteController {
         return ResponseEntity.ok(200);
     }
 
+
+    //得到账户盈亏数据
+    @RequestMapping("/checkData")
+    public ResponseEntity<?> checkData(@RequestBody JSONObject jsonObject){
+        //Coding here...
+        String account=jsonObject.get("account").toString();
+        Record record=new Record();
+        record.setAccount(account);
+        record.setTheProduct("基金000021");
+        record.setCondition(1);
+        Record record1=new Record();
+        record1.setAccount(account);
+        record1.setTheProduct("基金209001");
+        record1.setCondition(0);
+        List<Record>list=new ArrayList<>();
+        list.add(record);
+        list.add(record1);
+        return ResponseEntity.ok(list);
+    }
     /*
     *//**
      * 调用远程服务
