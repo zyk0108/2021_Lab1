@@ -1,5 +1,6 @@
 package com.example.test.Controller;
 
+import com.example.test.Entity.AccountFlow;
 import com.example.test.Entity.Config;
 import com.example.test.Entity.LoginRequest;
 import com.example.test.Entity.Record;
@@ -123,6 +124,23 @@ public class RemoteController {
         list.add(record1);
         return ResponseEntity.ok(list);
     }
+
+    //得到账户流水信息
+    @RequestMapping("/getAccountFlowInfo")
+    public ResponseEntity<?> getAccountFlowInfo(@RequestBody JSONObject jsonObject){
+        String account=jsonObject.get("account").toString();
+        //coding here
+
+        AccountFlow accountFlow=new AccountFlow();
+        accountFlow.setAccount(account);
+        accountFlow.setDate("2021.04.10");
+        accountFlow.setTheProduct("基金200021");
+        accountFlow.setTime(5);
+        List<AccountFlow>list=new ArrayList<>();
+        list.add(accountFlow);
+        return ResponseEntity.ok(list);
+    }
+
     /*
     *//**
      * 调用远程服务
@@ -148,11 +166,11 @@ public class RemoteController {
      * @return
      *//*
     @RequestMapping("/add-user")
-    public Result addUser(@RequestBody LoginRequest userEntity) {
+    public AccountFlow addUser(@RequestBody LoginRequest userEntity) {
         HttpEntity<LoginRequest> entity = new HttpEntity<>(userEntity);
-        ResponseEntity<Result> resultResponseEntity = this.restTemplate.exchange(
+        ResponseEntity<AccountFlow> resultResponseEntity = this.restTemplate.exchange(
                 "http://xxx.xxx.xxx.xxx/user/add",
-                HttpMethod.POST, entity, Result.class);
+                HttpMethod.POST, entity, AccountFlow.class);
         if (resultResponseEntity.getStatusCode() == HttpStatus.OK) {
             return resultResponseEntity.getBody();
         }

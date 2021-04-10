@@ -9,10 +9,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="searchAccountVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="getAccountGrade()">Confirm</el-button>
+        <el-button type="primary" @click="theFormLead()">Confirm</el-button>
       </div>
     </el-dialog>
-
 
     <!--购买的表单-->
     <el-dialog title="Please complete the form" :visible.sync="buyFormVisible">
@@ -88,16 +87,16 @@
           <el-submenu index="3">
             <template slot="title"><i class="el-icon-menu"></i>查看流水</template>
             <el-menu-item-group>
-              <el-menu-item index="3-1">时间</el-menu-item>
-              <el-menu-item index="3-2">金额</el-menu-item>
+              <el-menu-item index="3-1" @click="selectBy(0)">时间</el-menu-item>
+              <el-menu-item index="3-2" @click="selectBy(1)">金额</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
           <el-submenu index="4">
             <template slot="title"><i class="el-icon-menu"></i>理财产品</template>
             <el-menu-item-group>
-              <el-menu-item index="4-1" @click="searchAccountVisible = true">购买(盈亏）</el-menu-item>
-              <el-menu-item index="4-2" @click="searchAccountVisible = true">查询</el-menu-item>
+              <el-menu-item index="4-1" @click="searchAccountVisible = true, leadFlag=0">购买</el-menu-item>
+              <el-menu-item index="4-2" @click="searchAccountVisible = true, leadFlag=0">查询</el-menu-item>
               <!--<el-menu-item index="4-1" @click="searchAccountVisible = true,form.account=null">购买</el-menu-item>
               <el-menu-item index="4-2" @click="searchAccountVisible = true,form.account=null">查询</el-menu-item>-->
             </el-menu-item-group>
@@ -112,7 +111,7 @@
             <i class="el-icon-setting" style="margin-right: 15px;cursor: pointer;">关于此账户</i>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item >
-                <el-button @click="checkLogOut();">
+                <el-button @click="checkLogOut()">
                   注销此账户（登出）
                 </el-button>
               </el-dropdown-item>
@@ -168,6 +167,32 @@
               </el-table-column>
             </el-table>
           </div>
+
+          <!--流水信息-->
+          <div v-show="showBoughtButton" align="left">
+            <el-button type="primary" size="mini" @click="theBoughtShow()">查看此账号持仓情况及盈亏</el-button>
+            <el-button type="primary" size="mini" @click="canBuyButtonShow()">查看此账号可以购买产品</el-button>
+          </div>
+          <div v-show="showBoughtProductsDetail">
+            <el-table
+              :data="tableData"
+              style="width: 100%">
+              <el-table-column
+                prop="account"
+                label="账号"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="productName"
+                label="产品名称"
+                width="180">
+              </el-table-column>
+              <el-table-column
+                prop="balance"
+                label="盈亏状况">
+              </el-table-column>
+            </el-table>
+          </div>
         </el-main>
 
       </el-container>
@@ -185,6 +210,8 @@
 
         //弹出购买产品表单
         buyFormVisible:false,
+
+        leadFlag:0,
         // 弹出账号搜索输入框
         searchAccountVisible: false,
         formLabelWidth:'120px',
@@ -236,10 +263,6 @@
         showProductsCanBuy:false,
         showBoughtButton:false,
         showBoughtProductsDetail:false,//盈亏情况
-
-        cashList: [],   //列表数组(现在是准备请求接口，不需要模拟的数据，所以设置一个空数组)
-        topicList:[],
-
       }
     },
 
@@ -252,8 +275,10 @@
         });
       },
 
-      getBankFlowInfo(){
-        this.$axios.post('/xxx',{
+      //银行流水信息查询
+      getAccountFlowInfo(){
+        this.$axios.post('/getAccountFlowInfo',{
+          account: "",
           token: localStorage.getItem("token")
         }).then((response) => {
           //如果请求成功
@@ -266,6 +291,30 @@
           //invoke the function
           this.failure();
         });
+      },
+
+      //账号流水信息筛选
+      selectBy(condition){
+        this.searchAccountVisible = true
+        if (condition == 1) {
+
+        }else {
+
+        }
+        //主界面显示关闭
+        this.showProductsCanBuy=false
+        this.showBoughtButton=false
+        this.showBoughtProductsDetail=false
+        this.leadFlag=1
+      },
+
+      //控制账号查询的弹窗导向
+      theFormLead(){
+        if (this.leadFlag == 0) {
+          this.getAccountGrade()
+        }else {
+          this.getAccountFlowInfo()
+        }
       },
 
       //控制持仓button显示
@@ -455,6 +504,7 @@
           productId:this.productId,//产品代号
           fine:this.fine,
           date:this.buyForm.date,
+          time:this.form.time,
           productNum:this.buyForm.productNum,
           token: localStorage.getItem("token")
         }).then((response) => {
