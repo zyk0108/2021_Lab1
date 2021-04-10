@@ -87,8 +87,7 @@
           <el-submenu index="3">
             <template slot="title"><i class="el-icon-menu"></i>查看流水</template>
             <el-menu-item-group>
-              <el-menu-item index="3-1" @click="selectBy(0)">时间</el-menu-item>
-              <el-menu-item index="3-2" @click="selectBy(1)">金额</el-menu-item>
+              <el-menu-item index="3-1" @click="selectBy(0)">查询筛选</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 
@@ -170,11 +169,11 @@
 
           <!--流水信息-->
           <div v-show="showFlowButton" align="left">
-            <el-button type="primary" size="mini" @click="theBoughtShow()">按时间顺序</el-button>
-            <el-button type="primary" size="mini" @click="canBuyButtonShow()">按金额大小</el-button>
+            <el-button type="primary" size="mini" @click="clearFilter()">清除所有过滤器</el-button>
           </div>
           <div v-show="showFlowDetail">
             <el-table
+              ref="filterTable"
               :data="flowData"
               style="width: 100%">
               <el-table-column
@@ -185,15 +184,32 @@
               <el-table-column
                 prop="date"
                 label="日期"
-                width="180">
+                sortable
+                width="180"
+                column-key="date"
+                :filters="[{text: '2021.06.10', value: '2021.06.10'}]"
+                :filter-method="filterHandler">
               </el-table-column>
+
               <el-table-column
                 prop="operation"
-                label="产品名称">
+                label="相关操作"
+                width="100"
+                :filters="[{ text: '购买的记录', value: '购' }]"
+                :filter-method="filterBuy">
               </el-table-column>
+
               <el-table-column
                 prop="amount"
-                label="涉及的金额">
+                label="涉及的金额"
+                :filters="[{ text: '金额大于1000', value: 1000 }]"
+                :filter-method="filterTag"
+                filter-placement="bottom-end">
+                <template slot-scope="scope">
+                  <el-tag
+                    :type="scope.row.amount > 1000 ? 'primary' : 'success'"
+                    disable-transitions>{{scope.row.amount}}</el-tag>
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -279,6 +295,23 @@
     },
 
     methods:{
+      //Re_3过滤筛选
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
+      },
+      filterTag(value, row) {
+        return row.amount > value;
+      },
+      filterHandler(value, row, column) {
+        const property = column['property'];
+        return row[property] === value;
+      },
+
+      filterBuy(value, row){
+        var c = row.operation[0]
+        return c == value
+      },
+
       //操作结果提示
       buySuccess() {
         this.$message({
@@ -303,6 +336,12 @@
             for (let i = 0; i < len; i++) {
               this.flowData.push({account: response.data[i].account, date: response.data[i].date, operation: response.data[i].operation,amount:response.data[i].amount});
             }
+
+            //测试
+            this.flowData.push({account: response.data[0].account, date: '2021.04.10', operation: '购买233',amount:200});
+            this.flowData.push({account: response.data[0].account, date: '2021.04.12', operation: '33买233',amount:200456});
+            this.flowData.push({account: response.data[0].account, date: '2021.04.30', operation: '购买233',amount:207890});
+
             //关闭账号查询弹出框
             this.searchAccountVisible = false
 
