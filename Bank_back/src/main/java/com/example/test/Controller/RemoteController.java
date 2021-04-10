@@ -134,8 +134,8 @@ public class RemoteController {
         AccountFlow accountFlow=new AccountFlow();
         accountFlow.setAccount(account);
         accountFlow.setDate("2021.04.10");
-        accountFlow.setTheProduct("基金200021");
-        accountFlow.setTime(5);
+        accountFlow.setOperation("购买基金200021");
+        accountFlow.setAmount(2000);
         List<AccountFlow>list=new ArrayList<>();
         list.add(accountFlow);
         return ResponseEntity.ok(list);

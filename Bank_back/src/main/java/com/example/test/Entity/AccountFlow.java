@@ -3,8 +3,8 @@ package com.example.test.Entity;
 public class AccountFlow {
     private String account;
     private String date;
-    private String theProduct;
-    private int time;
+    private String operation;
+    private int amount;
 
     public String getAccount() {
         return account;
@@ -22,19 +22,19 @@ public class AccountFlow {
         this.date = date;
     }
 
-    public String getTheProduct() {
-        return theProduct;
+    public String getOperation() {
+        return operation;
     }
 
-    public void setTheProduct(String theProduct) {
-        this.theProduct = theProduct;
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 
-    public int getTime() {
-        return time;
+    public int getAmount() {
+        return amount;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

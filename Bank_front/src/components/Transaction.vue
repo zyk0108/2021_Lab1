@@ -169,13 +169,13 @@
           </div>
 
           <!--流水信息-->
-          <div v-show="showBoughtButton" align="left">
-            <el-button type="primary" size="mini" @click="theBoughtShow()">查看此账号持仓情况及盈亏</el-button>
-            <el-button type="primary" size="mini" @click="canBuyButtonShow()">查看此账号可以购买产品</el-button>
+          <div v-show="showFlowButton" align="left">
+            <el-button type="primary" size="mini" @click="theBoughtShow()">按时间顺序</el-button>
+            <el-button type="primary" size="mini" @click="canBuyButtonShow()">按金额大小</el-button>
           </div>
-          <div v-show="showBoughtProductsDetail">
+          <div v-show="showFlowDetail">
             <el-table
-              :data="tableData"
+              :data="flowData"
               style="width: 100%">
               <el-table-column
                 prop="account"
@@ -183,13 +183,17 @@
                 width="180">
               </el-table-column>
               <el-table-column
-                prop="productName"
-                label="产品名称"
+                prop="date"
+                label="日期"
                 width="180">
               </el-table-column>
               <el-table-column
-                prop="balance"
-                label="盈亏状况">
+                prop="operation"
+                label="产品名称">
+              </el-table-column>
+              <el-table-column
+                prop="amount"
+                label="涉及的金额">
               </el-table-column>
             </el-table>
           </div>
@@ -251,6 +255,8 @@
 
         //盈亏
         tableData: [],
+        //流水
+        flowData: [],
 
         //时间
         pickerOptions: {
@@ -259,10 +265,16 @@
           }
         },
 
-        //显示可以购买的产品的卡片
+        //RE_4显示可以购买的产品的卡片
         showProductsCanBuy:false,
         showBoughtButton:false,
         showBoughtProductsDetail:false,//盈亏情况
+
+        //RE_3显示可以购买的产品的卡片
+        showFlowButton:false,
+        showFlowDetail:false,//流水信息展示
+        //Re_3
+        selectCondition:0,
       }
     },
 
@@ -275,15 +287,24 @@
         });
       },
 
+
       //银行流水信息查询
       getAccountFlowInfo(){
         this.$axios.post('/getAccountFlowInfo',{
-          account: "",
+          account: this.form.account,
           token: localStorage.getItem("token")
         }).then((response) => {
           //如果请求成功
           if(response.status==200){
-            //coding here...
+            let len=response.data.length
+            console.log(len)
+
+            this.flowData=[]
+            for (let i = 0; i < len; i++) {
+              this.flowData.push({account: response.data[i].account, date: response.data[i].date, operation: response.data[i].operation,amount:response.data[i].amount});
+            }
+            //关闭账号查询弹出框
+            this.searchAccountVisible = false
 
           }
         }).catch((error) => {
@@ -296,24 +317,35 @@
       //账号流水信息筛选
       selectBy(condition){
         this.searchAccountVisible = true
-        if (condition == 1) {
-
-        }else {
-
-        }
-        //主界面显示关闭
-        this.showProductsCanBuy=false
-        this.showBoughtButton=false
-        this.showBoughtProductsDetail=false
         this.leadFlag=1
+        this.selectCondition=condition
       },
+
+
 
       //控制账号查询的弹窗导向
       theFormLead(){
+        //0代表RE_4
         if (this.leadFlag == 0) {
+          //用于购买
           this.getAccountGrade()
+          //主界面其他显示关闭
+          this.showFlowButton=false
+          this.showFlowDetail=false
+          this.showBoughtProductsDetail=false
+          //开主界面
+          this.showProductsCanBuy=true
+          this.showBoughtButton=true
         }else {
+          //用于账号流水
           this.getAccountFlowInfo()
+          //主界面其他显示关闭
+          this.showProductsCanBuy=false
+          this.showBoughtButton=false
+          this.showBoughtProductsDetail=false
+          //开主界面
+          this.showFlowButton=true
+          this.showFlowDetail=true
         }
       },
 
@@ -388,8 +420,6 @@
                 this.productCanBuy.push(this.products[2]);
             }
             this.searchAccountVisible = false
-            this.showProductsCanBuy=true
-            this.showBoughtButton=true
             console.log(response.data.grade)
             console.log(this.productCanBuy)
           }
