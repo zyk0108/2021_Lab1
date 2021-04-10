@@ -319,9 +319,18 @@
               //得到账号余额
               this.getAccountBalance()
               if ((this.buyForm.productPrice*this.buyForm.productNum) > (this.accountBalance-response.data.fine)) {
-                this.canNotBuy("your account balance is not enough because of the fine you should pay.")
+                this.canNotBuy("your account balance is not enough because of the fine and the product you should pay.")
               }else {
-                this.ifBuy("your account balance is enough,but you should pay for the fine and the product price at one time.")
+                this.canBuy("your account balance is enough,and you should pay for the fine and the product price at one time.")
+              }
+            }else{
+              //得到账号余额
+              this.getAccountBalance()
+              //response.data.fine=0,所以有无均一样
+              if ((this.buyForm.productPrice*this.buyForm.productNum) > (this.accountBalance-response.data.fine)) {
+                this.canNotBuy("your account balance is not enough because of the product you should pay.")
+              }else {
+                this.canBuy("your account balance is enough,click confirm to ensure you will pay for the product.")
               }
             }
           }
@@ -374,7 +383,7 @@
       },
 
       //判断是否确认购买产品
-      ifBuy(message) {
+      canBuy(message) {
         this.$alert('Sure do the operation?'+message, 'Alert information:', {
           confirmButtonText: 'OK',
           callback: action => {
