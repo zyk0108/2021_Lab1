@@ -1,5 +1,66 @@
 <template>
   <div id="app">
+    <!--隐藏的输入框，账号查询使用-->
+    <el-dialog title="Please input the account" :visible.sync="searchAccountVisible">
+      <el-form :model="form">
+        <el-form-item label="Account:" :label-width="formLabelWidth">
+          <el-input v-model="form.account" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="searchAccountVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="getAccountGrade()">Confirm</el-button>
+      </div>
+    </el-dialog>
+
+
+    <!--购买的表单-->
+    <el-dialog title="Please complete the form" :visible.sync="buyFormVisible">
+      <el-form ref="form" :rules="buyFormRules" :model="buyForm" label-width="130px" size="mini">
+        <el-form-item label="Your account" required>
+          <el-input v-model="buyForm.account" autocomplete="on" v-bind:disabled="true"></el-input>
+        </el-form-item>
+
+        <el-form-item label="Product name" required>
+          <el-input v-model="buyForm.productName" autocomplete="on" v-bind:disabled="true"></el-input>
+        </el-form-item>
+
+        <el-form-item label="Product price" required>
+          <el-input v-model="buyForm.productPrice" autocomplete="on" v-bind:disabled="true"></el-input>
+        </el-form-item>
+
+        <el-form-item label="Product amount" prop="productNum" required>
+          <el-input v-model="buyForm.productNum" ></el-input>
+        </el-form-item>
+
+        <!--<el-form-item label="The time" required>
+          <el-col :span="11">
+            <el-date-picker type="date" placeholder="Select Date" v-model="buyForm.date" style="width: 100%;"></el-date-picker>
+          </el-col>
+          <el-col class="line" :span="2">-</el-col>
+          <el-col :span="11">
+            <el-time-picker placeholder="Select time" v-model="buyForm.time" style="width: 100%;"></el-time-picker>
+          </el-col>
+        </el-form-item>-->
+
+        <el-form-item prop="time" label="The time" required>
+          <el-date-picker type="date"
+                          format="yyyy.MM.dd" value-format="yyyy.MM.dd"
+                          :picker-options="pickerOptions"
+                          placeholder="the time(now)" auto-complete="off"
+                          v-model="buyForm.time" style="width: 100%">
+          </el-date-picker>
+        </el-form-item>
+
+        <el-form-item size="mini">
+          <el-button type="primary" @click="canBuyProduct()">Submit</el-button>
+          <el-button @click="buyFormVisible=false">cancel</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+
+
     <el-container style="height: 100%; border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
         <div style="align-content: center">
@@ -8,7 +69,7 @@
           <div style="margin-bottom: 20px">Name: {{this.name}}</div>
         </div>
         <!--实现导航栏的默认开关-->
-        <el-menu ><!--:default-openeds="['1','3']"-->
+        <el-menu :default-openeds="['3','4']"><!--:default-openeds="['1','3']"-->
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-menu"></i>柜面还款</template>
             <el-menu-item-group>
@@ -24,6 +85,20 @@
 
           <el-submenu index="3">
             <template slot="title"><i class="el-icon-menu"></i>查看流水</template>
+            <el-menu-item-group>
+              <el-menu-item index="3-1">时间</el-menu-item>
+              <el-menu-item index="3-2">金额</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+
+          <el-submenu index="4">
+            <template slot="title"><i class="el-icon-menu"></i>理财产品</template>
+            <el-menu-item-group>
+              <el-menu-item index="4-1" @click="searchAccountVisible = true">购买</el-menu-item>
+              <el-menu-item index="4-2" @click="searchAccountVisible = true">查询</el-menu-item>
+              <!--<el-menu-item index="4-1" @click="searchAccountVisible = true,form.account=null">购买</el-menu-item>
+              <el-menu-item index="4-2" @click="searchAccountVisible = true,form.account=null">查询</el-menu-item>-->
+            </el-menu-item-group>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -44,34 +119,26 @@
         </el-header>
 
         <el-main>
-
           <el-row :gutter="12">
-            <el-col :span="8" id="conferenceList_needAudit" v-for="cashLists in cashList" :key="cashLists.id">
+            <el-col :span="8" id="conferenceList_needAudit" v-for="product in productCanBuy" :key="product.id">
               <el-card class="box-card" style="text-align: left;margin: 5px 0px">
                 <div slot="header" class="clearfix">
-                  <span>Conference information:</span>
+                  <span>理财产品（可以购买）:</span>
                 </div>
                 <div class="text item">
                   <el-card class="box-card" style="text-align: left;margin: 5px 0px">
                     <div class="text item">
-                      <p>ShortName:{{cashLists.shortname}}<p>
-                      <p>FullName: {{cashLists.fullname}}</p>
-                      <p>StartTime:{{cashLists.starttime}}</p>
-                      <p>EndTime:{{cashLists.endtime}}</p>
-                      <p>Address:{{cashLists.address}}</p>
-                      <p>Deadline for submission: {{cashLists.ddl}}</p>
-                      <p>ReleaseTime:{{cashLists.releaseTime}}</p>
+                      <p>ProductName:{{product}}</p>
                     </div>
                   </el-card>
                 </div>
                 <div  class="clearfix">
-                  <!--<div style="text-align: right; margin: 0">
-                    <el-button v-if="cashLists.condition==0" type="primary" size="mini" @click="/////">###</el-button>
-                  </div>-->
+                  <div style="text-align: right; margin: 0">
+                    <el-button type="primary" size="mini" @click="getBuyForm(product)">购买此产品</el-button>
+                  </div>
                 </div>
               </el-card>
             </el-col>
-
           </el-row>
         </el-main>
       </el-container>
@@ -86,34 +153,242 @@
     data() {
       return{
         name:localStorage.getItem("username"),
-        visible:false,
+
+        //弹出购买产品表单
+        buyFormVisible:false,
+        // 弹出账号搜索输入框
+        searchAccountVisible: false,
+        formLabelWidth:'120px',
+        form:{
+          account:'',
+        },
+
+        //购买产品,账号对应于form.account
+        products:["股票","基金","定期"],
+        grade:1, // 账户的等级
+        productCanBuy:[], // 此账户可以买的产品
+        productBuy:'', // 选择买的产品
+        accountBalance:'',//账户的金额
+
+        productId:'',//产品代号
+        fine:'',//罚金的金额，不欠罚金为0
+        //购买产品表单
+        buyForm: {
+          account:'',//具体的账号
+          productName:'',
+          productPrice:'',
+          time:'',
+          productNum:'',//购买的产品的数量，如股票数
+          active:'active'
+        },
+        buyFormRules:{
+          productNum: [
+            { required: true, message: 'your productNum can not be null', trigger: 'blur' },
+            { max: 10, message: 'the max length is 10', trigger: 'blur' },
+          ],
+          time: [
+            {required: true, message: 'Select the time', trigger: 'blur'}
+          ]
+        },
+
+        //时间
+        //ddl
+        pickerOptions: {
+          disabledDate: (time) => {
+            return time.getTime() < Date.now() - 8.64e7;
+          }
+        },
 
         cashList: [],   //列表数组(现在是准备请求接口，不需要模拟的数据，所以设置一个空数组)
         topicList:[],
+
       }
     },
 
     methods:{
-      getConferencesInformation(){
+      //操作结果提示
+      buySuccess() {
+        this.$message({
+          message: 'You have bought the product successfully.',
+          type: 'success'
+        });
+      },
+
+      getBankFlowInfo(){
         this.$axios.post('/xxx',{
           token: localStorage.getItem("token")
         }).then((response) => {
-          //如果请求成功了，这接口code为0代表请求成功。具体怎样判断还需要看接口
+          //如果请求成功
           if(response.status==200){
-            //设置列表数据
             //coding here...
 
           }
         }).catch((error) => {
           console.log(error);
           //invoke the function
-          this.conferenceAuditQuitWrong();
+          this.failure();
+        });
+      },
+
+      // method for get the account grade
+      getAccountGrade(){
+        this.$axios.post('/getAccountGrade',{
+          account:this.form.account,
+          token: localStorage.getItem("token")
+        }).then((response) => {
+          //如果请求成功
+          if(response.status==200){
+            //将用户等级设置为返回的account
+            this.grade=response.data.grade;
+            switch (this.grade) {
+              case 1:
+                this.productCanBuy=this.products;
+                break;
+              case 2:
+                this.productCanBuy=[]
+                console.log(this.productCanBuy[0])
+                this.productCanBuy.push(this.products[1]);
+                this.productCanBuy.push(this.products[2]);
+                break;
+              case 3:
+                this.productCanBuy=[]
+                this.productCanBuy.push(this.products[2]);
+            }
+            this.searchAccountVisible = false
+            console.log(response.data.grade)
+            console.log(this.productCanBuy)
+          }
+        }).catch((error) => {
+          console.log(error);
+          //invoke the function
+          this.failure();
+          this.searchAccountVisible = false
         });
       },
 
 
-      failure_conferenceAudit() {
-        this.$alert('You have failed the conference successfully!', 'Audit the conference:', {
+      //弹出购买产品表单
+      getBuyForm(theName){
+        switch (theName) {
+          case "股票":
+            this.productId=1;
+            break;
+          case "基金":
+            this.productId=2;
+            break;
+          case "定期":
+            this.productId=3;
+        }
+        //price undefined ???
+        let price=this.getProductPrice(this.productId)
+        console.log(price)
+        this.buyForm.account=this.form.account
+        this.buyForm.productName=theName
+
+        this.buyFormVisible=true
+      },
+
+      //得到产品的价格
+      getProductPrice(id){
+        this.$axios.post("/getProductPrice/"+id,
+          {
+            token: localStorage.getItem("token")
+          }
+        ).then((resp)=>{
+          console.log("getPrice")
+          if (resp.status == 200) {
+            this.buyForm.productPrice=resp.data.productPrice
+          }
+        }).catch((error)=>{
+          console.log(error)
+          this.failure()
+        })
+      },
+
+
+      //判断是否有罚金，是否可以买产品
+      canBuyProduct(){
+        this.$axios.post('/canBuyProduct',{
+          account:this.form.account,
+          token: localStorage.getItem("token")
+        }).then((response) => {
+          //如果请求成功
+          if(response.status==200){
+            //coding here...
+            if (response.data.flag == true) {
+              //得到账号余额
+              this.getAccountBalance()
+              if ((this.buyForm.productPrice*this.buyForm.productNum) > (this.accountBalance-response.data.fine)) {
+                this.canNotBuy("your account balance is not enough because of the fine you should pay.")
+              }else {
+                this.ifBuy("your account balance is enough,but you should pay for the fine and the product price at one time.")
+              }
+            }
+          }
+        }).catch((error) => {
+          console.log(error);
+          //invoke the function
+          this.failure();
+        });
+      },
+
+      //得到账户的存储的金额
+      getAccountBalance(){
+        this.$axios.post('/getAccountBalance',{
+          account:this.form.account,
+          token: localStorage.getItem("token")
+        }).then((response) => {
+          //如果请求成功
+          if(response.status==200){
+            //coding here...
+            this.accountBalance=response.data.accountBalance
+          }
+        }).catch((error) => {
+          console.log(error);
+          //invoke the function
+          this.failure();
+        });
+      },
+
+      //购买产品
+      buyProduct(){
+        this.$axios.post('/buyProduct',{
+          account:this.form.account,
+          productId:this.productId,//产品代号
+          fine:this.fine,
+          date:this.buyForm.date,
+          productNum:this.buyForm.productNum,
+          token: localStorage.getItem("token")
+        }).then((response) => {
+          //如果请求成功
+          if(response.status==200){
+            //coding here...
+            this.buyFormVisible=false
+            this.buySuccess()
+          }
+        }).catch((error) => {
+          console.log(error);
+          //invoke the function
+          this.failure();
+        });
+      },
+
+      //判断是否确认购买产品
+      ifBuy(message) {
+        this.$alert('Sure do the operation?'+message, 'Alert information:', {
+          confirmButtonText: 'OK',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+            if(action == 'confirm')this.buyProduct();
+          }
+        });
+      },
+
+      canNotBuy(message) {
+        this.$alert('You have failed the operation!'+message, 'Alert information:', {
           confirmButtonText: 'OK',
           callback: action => {
             this.$message({
@@ -124,8 +399,9 @@
         });
       },
 
-      success_conferenceAudit() {
-        this.$alert('You have passed the conference successfully.', 'Audit the conference:', {
+
+      failure() {
+        this.$alert('You have failed the operation!', 'Alert information:', {
           confirmButtonText: 'OK',
           callback: action => {
             this.$message({
@@ -136,7 +412,20 @@
         });
       },
 
-      //注销账号
+      success() {
+        this.$alert('You have done this successfully.', 'Alert info:', {
+          confirmButtonText: 'OK',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
+      },
+
+
+      //登出账号：两个方法
       logoutAccount() {
         // 移除token
         localStorage.removeItem('token')
@@ -144,7 +433,6 @@
         localStorage.removeItem('username')
         this.$router.replace({path: '/'})
       },
-
       checkLogOut() {
         this.$alert('Are you sure to logout ?', 'Confirm', {
           confirmButtonText: 'OK',

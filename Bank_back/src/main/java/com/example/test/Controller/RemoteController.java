@@ -9,6 +9,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+
 
 //允许跨域访问
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -47,7 +49,56 @@ public class RemoteController {
     }
 
 
+    //实现返回账号等级
+    @RequestMapping("/getAccountGrade")
+    public ResponseEntity<?> getAccountGrade(){
+        HashMap<String, Object> result = new HashMap<>();
+        //待完善......
 
+        result.put("grade",3);
+        return ResponseEntity.ok(result);
+    }
+
+
+    //实现产品价格返回
+    @RequestMapping("/getProductPrice/{productId}")
+    public ResponseEntity<?> getProductPrice(@PathVariable int productId){
+        //Coding here...
+
+        System.out.println(productId);
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("productPrice",1000);
+        return ResponseEntity.ok(result);
+    }
+
+    //实现账号的罚金返回
+    @RequestMapping("/canBuyProduct")
+    public ResponseEntity<?> canBuyProduct(){
+        //Coding here...
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("fine",100);
+        result.put("flag",true);
+        return ResponseEntity.ok(result);
+    }
+
+    //得到账户金额
+    @RequestMapping("/getAccountBalance")
+    public ResponseEntity<?> getAccountBalance(){
+        //Coding here...
+
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("accountBalance",60000);
+        return ResponseEntity.ok(result);
+    }
+
+    //得到账户金额
+    @RequestMapping("/buyProduct")
+    public ResponseEntity<?> buyProduct(){
+        //Coding here...
+
+        return ResponseEntity.ok(200);
+    }
 
     /*
     *//**
