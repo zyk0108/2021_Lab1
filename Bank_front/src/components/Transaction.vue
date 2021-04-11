@@ -164,6 +164,10 @@
                 prop="balance"
                 label="盈亏状况">
               </el-table-column>
+              <el-table-column
+                prop="theTime"
+                label="操作时间">
+              </el-table-column>
             </el-table>
           </div>
 
@@ -247,7 +251,7 @@
         accountBalance:'',//账户的金额
 
         productId:'',//产品代号
-        fine:'',//罚金的金额，不欠罚金为0
+        fine:0,//罚金的金额，不欠罚金为0
         productTimeNeed:false,
         //购买产品表单
         buyForm: {
@@ -337,10 +341,10 @@
               this.flowData.push({account: response.data[i].account, date: response.data[i].date, operation: response.data[i].operation,amount:response.data[i].amount});
             }
 
-            //测试
-            this.flowData.push({account: response.data[0].account, date: '2021.04.10', operation: '购买233',amount:200});
-            this.flowData.push({account: response.data[0].account, date: '2021.04.12', operation: '33买233',amount:200456});
-            this.flowData.push({account: response.data[0].account, date: '2021.04.30', operation: '购买233',amount:207890});
+            // //测试
+            // this.flowData.push({account: response.data[0].account, date: '2021.04.10', operation: '购买233',amount:200});
+            // this.flowData.push({account: response.data[0].account, date: '2021.04.12', operation: '33买233',amount:200456});
+            // this.flowData.push({account: response.data[0].account, date: '2021.04.30', operation: '购买233',amount:207890});
 
             //关闭账号查询弹出框
             this.searchAccountVisible = false
@@ -423,7 +427,7 @@
                 case 1:
                   balance="盈利"
               }
-              this.tableData.push({account: response.data[i].account, productName: response.data[i].theProduct, balance: balance});
+              this.tableData.push({account: response.data[i].account, productName: response.data[i].theProduct, balance: balance, theTime: response.data[i].date});
             }
             console.log(response.data)
           }
@@ -515,24 +519,30 @@
 
       //判断是否有罚金，是否可以买产品
       canBuyProduct(){
+        //得到账号余额
+        this.getAccountBalance()
         this.$axios.post('/canBuyProduct',{
           account:this.form.account,
           token: localStorage.getItem("token")
         }).then((response) => {
           //如果请求成功
           if(response.status==200){
+            this.fine=response.data.fine
+            console.log(response.data)
             //coding here...
             if (response.data.flag == true) {
-              //得到账号余额
-              this.getAccountBalance()
+              console.log(this.accountBalance)
+              console.log(this.buyForm.productPrice*this.buyForm.productNum)
+              console.log(this.buyForm.productNum)
               if ((this.buyForm.productPrice*this.buyForm.productNum) > (this.accountBalance-response.data.fine)) {
                 this.canNotBuy("your account balance is not enough because of the fine and the product you should pay.")
               }else {
                 this.canBuy("your account balance is enough,and you should pay for the fine and the product price at one time.")
               }
             }else{
-              //得到账号余额
-              this.getAccountBalance()
+              console.log(this.accountBalance)
+              console.log(this.buyForm.productPrice*this.buyForm.productNum)
+              console.log(this.buyForm.productNum)
               //response.data.fine=0,所以有无均一样
               if ((this.buyForm.productPrice*this.buyForm.productNum) > (this.accountBalance-response.data.fine)) {
                 this.canNotBuy("your account balance is not enough because of the product you should pay.")
@@ -558,6 +568,7 @@
           if(response.status==200){
             //coding here...
             this.accountBalance=response.data.accountBalance
+            console.log(response.data)
           }
         }).catch((error) => {
           console.log(error);
@@ -572,8 +583,8 @@
           account:this.form.account,
           productId:this.productId,//产品代号
           fine:this.fine,
-          date:this.buyForm.date,
-          time:this.form.time,
+          date:this.buyForm.time,
+          time:this.buyForm.productTime,
           productNum:this.buyForm.productNum,
           token: localStorage.getItem("token")
         }).then((response) => {

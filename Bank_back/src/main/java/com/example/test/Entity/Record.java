@@ -7,6 +7,15 @@ public class Record {
     private String account;
     private String theProduct;
     private int condition;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getAccount() {
         return account;
