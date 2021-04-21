@@ -14,9 +14,9 @@ public class JDBCUtil {
         // 加载驱动
         Class.forName("com.mysql.cj.jdbc.Driver");
         // 获取连接
-        String url = "jdbc:mysql://127.0.0.1:3306/lab1_bank";
+        String url = "jdbc:mysql://127.0.0.1:3306/lab1?serverTimezone=Asia/Shanghai";
         String user = "root";
-        String password = "zyk0108";
+        String password = "123456cxp";
         Connection connection = DriverManager.getConnection(url, user, password);
         return connection;
     }

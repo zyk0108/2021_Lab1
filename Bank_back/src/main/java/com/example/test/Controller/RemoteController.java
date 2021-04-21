@@ -1,10 +1,9 @@
 package com.example.test.Controller;
 
-import com.example.test.Entity.AccountFlow;
-import com.example.test.Entity.Config;
-import com.example.test.Entity.LoginRequest;
-import com.example.test.Entity.Record;
+import com.example.test.Entity.*;
+import com.example.test.Service.LoanService;
 import com.example.test.Severce.JDBCUtil;
+import com.example.test.mapper.LoanMapper;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -27,6 +26,12 @@ public class RemoteController {
 
     //自动注入RestTemplate
     private final RestTemplate restTemplate;
+
+    @Autowired
+    private LoanMapper loanMapper;
+
+    @Autowired
+    private LoanService loanService;
 
     @Autowired
     public RemoteController(RestTemplate restTemplate) {
@@ -269,6 +274,8 @@ public class RemoteController {
             preparedStatement.setInt(1,balance-fine-productNum*price);
             preparedStatement.setString(2,account);
             preparedStatement.executeUpdate();
+            int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
+            loanMapper.updateCard(balance-fine-productNum*price,customerId);
 
 
             if(fine != 0){
@@ -279,6 +286,10 @@ public class RemoteController {
                 preparedStatement2.setString(3,"交罚金");
                 preparedStatement2.setInt(4,fine);
                 preparedStatement2.executeUpdate();
+                List<Bill> bills = loanMapper.getBillFromCustomerCode(Integer.parseInt(account));
+                for(Bill bill:bills){
+                    loanService.payForFine(bill.getFine(),Integer.parseInt(account),bill.getPeriodNum(),bill.getLoan_num());
+                }
 
 
                 String sql4 = "Update accountinfo set fine = ? Where accountNum = ? ";
@@ -379,7 +390,7 @@ public class RemoteController {
 //        record1.setAccount(account);
 //        record1.setTheProduct("基金209001");
 //        record1.setCondition(0);
-        
+
         return ResponseEntity.ok(list);
     }
 

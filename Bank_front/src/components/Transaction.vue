@@ -72,7 +72,7 @@
         <!--实现导航栏的默认开关-->
         <el-menu :default-openeds="['3','4']"><!--:default-openeds="['1','3']"-->
           <el-submenu index="1">
-            <template slot="title"><i class="el-icon-menu"></i>柜面还款</template>
+            <template slot="title"><i class="el-icon-menu" @click="leadToRepay1"></i>柜面还款</template>
             <el-menu-item-group>
               <!--<el-menu-item index="1-1">1</el-menu-item>
               <el-menu-item index="1-2">2</el-menu-item>
@@ -81,7 +81,7 @@
           </el-submenu>
 
           <el-submenu index="2">
-            <template slot="title"><i class="el-icon-menu"></i>自动还款</template>
+            <template slot="title"><i class="el-icon-menu" @click="leadToRepay2"></i>自动还款</template>
           </el-submenu>
 
           <el-submenu index="3">
@@ -299,6 +299,12 @@
     },
 
     methods:{
+      leadToRepay1(){
+        this.$router.replace('/loanAccount')
+      },
+      leadToRepay2(){
+        this.$router.replace('/loanAccount')
+      },
       //Re_3过滤筛选
       clearFilter() {
         this.$refs.filterTable.clearFilter();

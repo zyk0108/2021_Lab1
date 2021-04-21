@@ -6,9 +6,14 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || null,
-    expireTime: localStorage.getItem('expireTime') || null
+    expireTime: localStorage.getItem('expireTime') || null,
+    loanAccount: localStorage.getItem('loanAccount') || null
   },
   mutations: {
+    setLoanAccount(state, row){
+      localStorage.setItem('loanAccount', row)
+      state.loanAccount = row
+    },
     login (state, data) {
       localStorage.setItem('token', data.token)
       localStorage.setItem('expireTime', JSON.stringify(data.expireTime))

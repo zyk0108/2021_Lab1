@@ -4,6 +4,8 @@ import HelloWorld from '@/components/HelloWorld'
 import Login from '@/components/Login'
 import Transaction from '@/components/Transaction'
 import store from '../store'
+import LoanAccount from '../components/LoanAccount'
+import Bill from '../components/Bill'
 
 Vue.use(Router)
 
@@ -30,6 +32,16 @@ export const router = new Router({
       path: '/hello',
       name: 'HelloWord',
       component: HelloWorld
+    },
+    {
+      path: '/loanAccount',
+      name: 'LoanAccount',
+      component: LoanAccount
+    },
+    {
+      path: '/bill',
+      name: 'Bill',
+      component: Bill
     }
   ]
 })
