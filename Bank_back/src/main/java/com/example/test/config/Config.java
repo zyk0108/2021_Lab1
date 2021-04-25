@@ -1,4 +1,4 @@
-package com.example.test.entity;
+package com.example.test.config;
 
 public class Config {
     public static final String BANK_LOGIN_URL="http://10.176.122.174:8012/sys/login/restful";

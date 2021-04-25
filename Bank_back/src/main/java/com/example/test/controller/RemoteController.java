@@ -1,5 +1,6 @@
 package com.example.test.controller;
 
+import com.example.test.config.Config;
 import com.example.test.entity.*;
 import com.example.test.mapper.*;
 import com.example.test.service.*;

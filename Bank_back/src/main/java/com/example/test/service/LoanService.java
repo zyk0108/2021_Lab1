@@ -2,7 +2,7 @@ package com.example.test.service;
 
 import com.example.test.entity.AccountInfo;
 import com.example.test.entity.Bill;
-import com.example.test.entity.Config;
+import com.example.test.config.Config;
 import com.example.test.entity.LoanAccount;
 import com.example.test.mapper.LoanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
