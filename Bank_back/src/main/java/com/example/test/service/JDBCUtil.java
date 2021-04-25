@@ -1,6 +1,5 @@
-package com.example.test.Severce;
+package com.example.test.service;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

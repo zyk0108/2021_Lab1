@@ -1,8 +1,8 @@
 package com.example.test.mapper;
 
-import com.example.test.Entity.AccountInfo;
-import com.example.test.Entity.Bill;
-import com.example.test.Entity.LoanAccount;
+import com.example.test.entity.AccountInfo;
+import com.example.test.entity.Bill;
+import com.example.test.entity.LoanAccount;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

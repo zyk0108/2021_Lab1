@@ -1,8 +1,8 @@
-package com.example.test.Controller;
+package com.example.test.controller;
 
-import com.example.test.Entity.Bill;
-import com.example.test.Entity.LoanAccount;
-import com.example.test.Service.LoanService;
+import com.example.test.entity.Bill;
+import com.example.test.entity.LoanAccount;
+import com.example.test.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

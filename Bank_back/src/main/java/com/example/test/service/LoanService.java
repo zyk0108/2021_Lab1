@@ -1,9 +1,9 @@
-package com.example.test.Service;
+package com.example.test.service;
 
-import com.example.test.Entity.AccountInfo;
-import com.example.test.Entity.Bill;
-import com.example.test.Entity.Config;
-import com.example.test.Entity.LoanAccount;
+import com.example.test.entity.AccountInfo;
+import com.example.test.entity.Bill;
+import com.example.test.entity.Config;
+import com.example.test.entity.LoanAccount;
 import com.example.test.mapper.LoanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
