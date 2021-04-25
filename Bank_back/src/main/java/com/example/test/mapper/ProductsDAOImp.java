@@ -1,4 +1,4 @@
-package com.example.test.service;
+package com.example.test.mapper;
 
 import com.example.test.entity.Products;
 import com.example.test.mapper.DAO;

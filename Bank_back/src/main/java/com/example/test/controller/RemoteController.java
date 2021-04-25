@@ -1,8 +1,8 @@
 package com.example.test.controller;
 
 import com.example.test.entity.*;
+import com.example.test.mapper.*;
 import com.example.test.service.*;
-import com.example.test.mapper.LoanMapper;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

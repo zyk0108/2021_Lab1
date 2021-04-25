@@ -1,4 +1,4 @@
-package com.example.test.service;
+package com.example.test.mapper;
 
 import com.example.test.entity.Transaction;
 import com.example.test.mapper.DAO;
