@@ -4,6 +4,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
@@ -14,12 +15,23 @@ import java.sql.SQLException;
 public class JDBCUtil {
     private static DataSource dataSource;
 
-    static {
+    /*static {
         dataSource = new  ComboPooledDataSource("testApp");
     }
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
+    }*/
+
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+        // 加载驱动
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        // 获取连接
+        String url = "jdbc:mysql://127.0.0.1:3306/lab1?serverTimezone=Asia/Shanghai";
+        String user = "root";
+        String password = "zyk0108";
+        Connection connection = DriverManager.getConnection(url, user, password);
+        return connection;
     }
 
     public static void releaseConnection(Connection connection){

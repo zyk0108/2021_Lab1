@@ -1,7 +1,6 @@
 package com.example.test.mapper;
 
 import com.example.test.entity.AccountInfo;
-import com.example.test.mapper.DAO;
 
 public class AccountInfoDAOImp extends DAO<AccountInfo> {
     public AccountInfo getAccountInfo(String accountNum){

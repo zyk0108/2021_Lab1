@@ -1,7 +1,6 @@
 package com.example.test.mapper;
 
 import com.example.test.entity.PurchaseInfo;
-import com.example.test.mapper.DAO;
 
 import java.sql.Date;
 import java.util.List;

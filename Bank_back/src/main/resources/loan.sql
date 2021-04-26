@@ -33,38 +33,38 @@ customerID INT ,
 remainAmount DOUBLE
 );
 
-create table accountinfo
-(
-    accountNum varchar(50)   not null,
-    loan       int default 0 not null,
-    deposit    int default 0 not null,
-    fine       int default 0 not null
-);
-
-create table products
-(
-    type  int   not null,
-    rate  float not null,
-    term  int   null,
-    price int   not null
-);
-
-create table purchase_info
-(
-    account     varchar(50) not null,
-    productType int         not null,
-    time        date        not null,
-    amount      int         not null,
-    duration    int         not null
-);
-
-create table transaction
-(
-    account   varchar(50)  not null,
-    time      date         not null,
-    operation varchar(255) not null,
-    amount    int          not null
-);
+# create table accountinfo
+# (
+#     accountNum varchar(50)   not null,
+#     loan       int default 0 not null,
+#     deposit    int default 0 not null,
+#     fine       int default 0 not null
+# );
+#
+# create table products
+# (
+#     type  int   not null,
+#     rate  float not null,
+#     term  int   null,
+#     price int   not null
+# );
+#
+# create table purchase_info
+# (
+#     account     varchar(50) not null,
+#     productType int         not null,
+#     time        date        not null,
+#     amount      int         not null,
+#     duration    int         not null
+# );
+#
+# create table transaction
+# (
+#     account   varchar(50)  not null,
+#     time      date         not null,
+#     operation varchar(255) not null,
+#     amount    int          not null
+# );
 
 
 
