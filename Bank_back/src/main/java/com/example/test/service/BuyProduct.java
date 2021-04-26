@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BuyProduct {
     @Autowired
@@ -21,8 +22,8 @@ public class BuyProduct {
      * @param account
      * @return
      */
-    public HashMap<String, Object> getAccountGrade(String account){
-        HashMap<String,Object>result=new HashMap<>();
+    public Map<String, Object> getAccountGrade(String account){
+        Map<String,Object>result=new HashMap<>();
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
         AccountInfo accountinfo = accountInfoDAOImp.getAccountInfo(account);
 
@@ -40,8 +41,8 @@ public class BuyProduct {
     }
 
     //实现产品价格返回
-    public HashMap<String, Object> getProductPrice(int productId) {
-        HashMap<String, Object> result = new HashMap<>();
+    public Map<String, Object> getProductPrice(int productId) {
+        Map<String, Object> result = new HashMap<>();
         ProductsDAOImp productsDAOImp = new ProductsDAOImp();
         Products products = productsDAOImp.getProducts(productId);
         int price = products.getPrice();
@@ -51,8 +52,8 @@ public class BuyProduct {
 
 
     //实现账号的罚金返回
-    public HashMap<String, Object> canBuyProduct(String account) {
-        HashMap<String, Object> result = new HashMap<>();
+    public Map<String, Object> canBuyProduct(String account) {
+        Map<String, Object> result = new HashMap<>();
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
         AccountInfo accountInfo = accountInfoDAOImp.getAccountInfo(account);
 
@@ -68,12 +69,12 @@ public class BuyProduct {
     }
 
     //得到账户余额
-    public HashMap<String, Object> getAccountBalance(String account) {
+    public Map<String, Object> getAccountBalance(String account) {
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
         AccountInfo accountInfo = accountInfoDAOImp.getAccountInfo(account);
 
         int balance = accountInfo.getDeposit();
-        HashMap<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         result.put("accountBalance", balance);
 
         return result;
@@ -88,19 +89,14 @@ public class BuyProduct {
      * @param strDate
      * @return
      */
-    public static Date strToDate(String strDate) {
+    public static Date strToDate(String strDate) throws Exception{
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
-        java.util.Date d = null;
-        try {
-            d = format.parse(strDate);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        java.util.Date d = format.parse(strDate);
         Date date = new Date(d.getTime());
         return date;
     }
 
-    public int buyProduct(String account,int productID,int fine,String theDate,int duration,int productNum) {
+    public int buyProduct(String account,int productID,int fine,String theDate,int duration,int productNum) throws Exception{
         Date date = strToDate(theDate);
 
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
