@@ -148,17 +148,13 @@ public class BuyProduct {
             Record record = new Record();
             record.setAccount(account);
             int type = each.getProductType();
-            String productType = "";
-            switch (type) {
-                case 1:
-                    productType = "股票";
-                    break;
-                case 2:
-                    productType = "基金";
-                    break;
-                case 3:
-                    productType = "定期";
-                    break;
+            String productType;
+            if (type==1){
+                productType = "股票";
+            }else if (type==2){
+                productType = "基金";
+            }else {
+                productType = "定期";
             }
             record.setTheProduct(productType);
             record.setDate(String.valueOf(each.getTime()));
