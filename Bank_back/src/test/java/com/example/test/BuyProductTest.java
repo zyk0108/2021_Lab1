@@ -6,6 +6,7 @@ import com.example.test.service.BuyProduct;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +23,7 @@ import static org.testng.AssertJUnit.assertEquals;
 * @version 1.0
 */
 public class BuyProductTest {
-    static BuyProduct buyProduct=new BuyProduct();
+   static BuyProduct buyProduct = new BuyProduct();
 
 @Before
 public void before() throws Exception {
@@ -43,11 +44,11 @@ public void after() throws Exception {
 public void testGetAccountGrade() throws Exception {
 //TODO: Test goes here...
     Map<String,Object> hashMap;
-    hashMap=buyProduct.getAccountGrade("001");
+    hashMap=buyProduct.getAccountGrade("1");
     assertEquals(1,hashMap.get("grade"));
-    hashMap=buyProduct.getAccountGrade("004");
+    hashMap=buyProduct.getAccountGrade("4");
     assertEquals(2,hashMap.get("grade"));
-    hashMap=buyProduct.getAccountGrade("003");
+    hashMap=buyProduct.getAccountGrade("3");
     assertEquals(3,hashMap.get("grade"));
 }
 
@@ -77,10 +78,10 @@ public void testGetProductPrice() throws Exception {
 public void testCanBuyProduct() throws Exception {
 //TODO: Test goes here...
     Map<String,Object>hashMap;
-    hashMap=buyProduct.canBuyProduct("001");
+    hashMap=buyProduct.canBuyProduct("1");
     assertEquals(0,hashMap.get("fine"));
     assertEquals(false,hashMap.get("flag"));
-    hashMap=buyProduct.canBuyProduct("005");
+    hashMap=buyProduct.canBuyProduct("5");
     assertEquals(9999,hashMap.get("fine"));
     assertEquals(true,hashMap.get("flag"));
 }
@@ -94,7 +95,7 @@ public void testCanBuyProduct() throws Exception {
 public void testGetAccountBalance() throws Exception {
 //TODO: Test goes here...
     Map<String,Object>hashMap;
-    hashMap=buyProduct.getAccountBalance("004");
+    hashMap=buyProduct.getAccountBalance("4");
     assertEquals(10000,hashMap.get("accountBalance"));
 }
 
@@ -119,9 +120,9 @@ public void testStrToDate() throws Exception {
 @Test
 public void testBuyProduct() throws Exception {
 //TODO: Test goes here...
-    int res=buyProduct.buyProduct("001",1,0,"2021.04.24",3,1);
+    int res=buyProduct.buyProduct("1",1,0,"2021.04.24",3,1);
     assertEquals(200,res);
-    res=buyProduct.buyProduct("001",1,1000,"2021.04.24",3,1);
+    res=buyProduct.buyProduct("1",1,1000,"2021.04.24",3,1);
     assertEquals(200,res);
 }
 
@@ -133,9 +134,9 @@ public void testBuyProduct() throws Exception {
 @Test
 public void testCheckData() throws Exception {
 //TODO: Test goes here...
-    List<Record> list=buyProduct.checkData("001");
+    List<Record> list=buyProduct.checkData("1");
     Record record=list.get(0);
-    assertEquals("001",record.getAccount());
+    assertEquals("1",record.getAccount());
     assertEquals("2021-04-11",record.getDate());
 }
 
@@ -147,9 +148,9 @@ public void testCheckData() throws Exception {
 @Test
 public void testGetAccountFlowInfo() throws Exception {
 //TODO: Test goes here...
-    List<AccountFlow>list=buyProduct.getAccountFlowInfo("002");
+    List<AccountFlow>list=buyProduct.getAccountFlowInfo("2");
     AccountFlow accountFlow=list.get(0);
-    assertEquals("002",accountFlow.getAccount());
+    assertEquals("2",accountFlow.getAccount());
     assertEquals(10000,accountFlow.getAmount());
     assertEquals("2021.04.12",accountFlow.getDate());
 }

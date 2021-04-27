@@ -3,6 +3,8 @@ package com.example.test.service;
 import com.example.test.entity.*;
 import com.example.test.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -11,36 +13,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class BuyProduct {
+
     @Autowired
     private LoanMapper loanMapper;
+
     @Autowired
     private LoanService loanService;
 
-    /**
-     * 得到账号的等级
-     * @param account
-     * @return
-     */
-    public Map<String, Object> getAccountGrade(String account){
-        Map<String,Object>result=new HashMap<>();
+    public Map<String, Object> getAccountGrade(String account) {
+        Map<String, Object> result = new HashMap<>();
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
         AccountInfo accountinfo = accountInfoDAOImp.getAccountInfo(account);
-
-        int deposit = accountinfo.getDeposit(),loan = accountinfo.getLoan();
-        int left=deposit - loan;
-
+        int deposit = accountinfo.getDeposit(), loan = accountinfo.getLoan();
+        int left = deposit - loan;
         if (left > 500000) {
             result.put("grade", 1);
-        } else if (left >= 0) {
+        }else if (left >= 0) {
             result.put("grade", 2);
-        } else {
+        }else {
             result.put("grade", 3);
         }
         return result;
     }
-
-    //实现产品价格返回
     public Map<String, Object> getProductPrice(int productId) {
         Map<String, Object> result = new HashMap<>();
         ProductsDAOImp productsDAOImp = new ProductsDAOImp();
@@ -56,7 +52,6 @@ public class BuyProduct {
         Map<String, Object> result = new HashMap<>();
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
         AccountInfo accountInfo = accountInfoDAOImp.getAccountInfo(account);
-
         int fine = accountInfo.getFine();
 
         result.put("fine", fine);
@@ -68,7 +63,6 @@ public class BuyProduct {
         return result;
     }
 
-    //得到账户余额
     public Map<String, Object> getAccountBalance(String account) {
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
         AccountInfo accountInfo = accountInfoDAOImp.getAccountInfo(account);
@@ -80,19 +74,12 @@ public class BuyProduct {
         return result;
     }
 
-    /**
-     *
-     * @param strDate
-     * @return
-     * @throws Exception
-     */
     public static Date strToDate(String strDate) throws Exception{
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
         java.util.Date d = format.parse(strDate);
         Date date = new Date(d.getTime());
         return date;
     }
-
     public int buyProduct(String account,int productID,int fine,String theDate,int duration,int productNum) throws Exception{
         Date date = strToDate(theDate);
 
@@ -108,24 +95,16 @@ public class BuyProduct {
         int depositTemp = balance - fine - productNum * price;
         accountInfoDAOImp.updateDeposit(depositTemp, account);
 
-        /*int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
-        loanMapper.updateCard(balance - fine - productNum * price, customerId);*/
+        //int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
+        //loanMapper.updateCard(balance - fine - productNum * price, customerId);
         if (fine != 0) {
             TransactionDAOImp transactionDAOImp = new TransactionDAOImp();
             transactionDAOImp.addTransaction(account, date, "交罚金", fine);
-
-            /*List<Bill> bills = loanMapper.getBillFromCustomerCode(Integer.parseInt(account));
-            for (Bill bill : bills) {
-                loanService.payForFine(bill.getFine(), Integer.parseInt(account), bill.getPeriodNum(), bill.getLoan_num());
-            }
-*/
             accountInfoDAOImp.updateFine(account);
         }
-
         int amountTemp = price * productNum;
         TransactionDAOImp transactionDAOImp = new TransactionDAOImp();
         transactionDAOImp.addTransaction(account, date, "购买产品" + productID, amountTemp);
-
         int Temp = price * productNum;
         PurchaseInfoDAOImp purchaseInfoDAOImp = new PurchaseInfoDAOImp();
         purchaseInfoDAOImp.addPurchaseInfo(account, productID, date, Temp, duration);
@@ -180,7 +159,8 @@ public class BuyProduct {
             for (int i = 0; i < temp.length(); i++) {
                 if (temp.charAt(i) == '-') {
                     result += ".";
-                } else {
+                }
+                else {
                     result += temp.charAt(i);
                 }
             }

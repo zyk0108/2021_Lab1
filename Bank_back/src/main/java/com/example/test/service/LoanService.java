@@ -15,12 +15,14 @@ import java.util.List;
 @Service
 public class LoanService {
 
-    private final LoanMapper mapper;
+    private LoanMapper mapper;
 
     @Autowired
     public LoanService(LoanMapper mapper){
         this.mapper = mapper;
     }
+
+
 
     public List<LoanAccount> getLoanAccount(){
         return mapper.getAllLoanAccount();
@@ -52,7 +54,7 @@ public class LoanService {
 
     public void payForBillTotally(double payAmount, int customerCode, int periodNum, int loan_num){
         Bill bill = mapper.getBillFromPeriodNumAndCustomerCode(periodNum,customerCode);
-        if(bill.getAlreadyFine().equals("no"))
+        if(bill.getAlreadyFine().equals("no") && bill.getFine()!=0)
             return;
         bill.setAlreadyPay("yes");
         AccountInfo accountInfo = mapper.getAccountInfoFromCustomerCode("" + bill.getCustomerCode());
@@ -64,7 +66,7 @@ public class LoanService {
 
     public void payForBillPartly(double payAmount, int customerCode, int periodNum, int loan_num){
         Bill bill = mapper.getBillFromPeriodNumAndCustomerCode(periodNum,customerCode);
-        if(bill.getAlreadyFine().equals("no"))
+        if(bill.getAlreadyFine().equals("no") && bill.getFine()!=0)
             return;
         bill.setRemainingForPay(new BigDecimal(String.valueOf(bill.getRemainingForPay())).subtract(new BigDecimal(String.valueOf(payAmount))).doubleValue());
         mapper.updateBill(bill);
@@ -81,14 +83,7 @@ public class LoanService {
     }
 
     private void processBill(Bill bill){
-        Date now = new Date();
-        if(bill.getDueTime().before(now) && bill.getOverdue().equals("no") && bill.getAlreadyFine().equals("no")){
-            bill.setOverdue("yes");
-            bill.setFine(bill.getLoanAmount() * Config.PENALTY_RATE);
-        }
-        if(bill.getOverdue().equals("no"))
-            return;
-        if(bill.getAlreadyPay().equals("yes"))
+        if(bill.getAlreadyPay().equals("yes") || bill.getOverdue().equals("no"))
             return;
         int customerId = mapper.getCustomerIdFromCustomerCode(bill.getCustomerCode());
         double remainAmount = mapper.getRemainAmountById(customerId);
@@ -103,9 +98,7 @@ public class LoanService {
                 mapper.updateFineForAccountInfo(0,bill.getCustomerCode()+"");
             }
         }
-        if(new BigDecimal(String.valueOf(remainAmount)).compareTo(new BigDecimal(String.valueOf(bill.getRemainingForPay())))<0)
-            return;
-        else{
+        if(new BigDecimal(String.valueOf(remainAmount)).compareTo(new BigDecimal(String.valueOf(bill.getRemainingForPay())))>=0) {
             remainAmount = new BigDecimal(String.valueOf(remainAmount)).subtract(new BigDecimal(String.valueOf(bill.getRemainingForPay()))).doubleValue();
             AccountInfo accountInfo = mapper.getAccountInfoFromCustomerCode(""+bill.getCustomerCode());
             accountInfo.setDeposit(accountInfo.getDeposit() - (int)bill.getRemainingForPay());
