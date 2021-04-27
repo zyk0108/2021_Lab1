@@ -100,6 +100,3 @@ insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remaini
 (9,9,9,1,10000,10000,'2021-04-30','no',0,'no','no');
 insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
 (9,9,9,2,10000,10000,'2021-05-10','no',0,'no','no');
-
-
-

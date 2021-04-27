@@ -2,21 +2,18 @@ package com.example.test.service;
 
 import com.example.test.entity.AccountInfo;
 import com.example.test.entity.Bill;
-import com.example.test.config.Config;
 import com.example.test.entity.LoanAccount;
 import com.example.test.mapper.LoanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class LoanService {
 
     private LoanMapper mapper;
-
     @Autowired
     public LoanService(LoanMapper mapper){
         this.mapper = mapper;
@@ -54,7 +51,7 @@ public class LoanService {
 
     public void payForBillTotally(double payAmount, int customerCode, int periodNum, int loan_num){
         Bill bill = mapper.getBillFromPeriodNumAndCustomerCode(periodNum,customerCode);
-        if(bill.getAlreadyFine().equals("no") && bill.getFine()!=0)
+        if(bill.getFine()!=0)
             return;
         bill.setAlreadyPay("yes");
         AccountInfo accountInfo = mapper.getAccountInfoFromCustomerCode("" + bill.getCustomerCode());
@@ -66,7 +63,7 @@ public class LoanService {
 
     public void payForBillPartly(double payAmount, int customerCode, int periodNum, int loan_num){
         Bill bill = mapper.getBillFromPeriodNumAndCustomerCode(periodNum,customerCode);
-        if(bill.getAlreadyFine().equals("no") && bill.getFine()!=0)
+        if(bill.getFine()!=0)
             return;
         bill.setRemainingForPay(new BigDecimal(String.valueOf(bill.getRemainingForPay())).subtract(new BigDecimal(String.valueOf(payAmount))).doubleValue());
         mapper.updateBill(bill);

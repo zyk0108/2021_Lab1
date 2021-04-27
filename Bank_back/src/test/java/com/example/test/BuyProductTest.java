@@ -6,7 +6,6 @@ import com.example.test.service.BuyProduct;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
