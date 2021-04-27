@@ -1,4 +1,9 @@
-create table if not exists accountinfo
+drop table if exists lab1.accountinfo;
+drop table if exists lab1.products;
+drop table if exists lab1.purchase_info;
+drop table if exists lab1.transaction;
+
+create table if not exists lab1.accountinfo
 (
     accountNum varchar(50)   not null,
     loan       int default 0 not null,
@@ -47,8 +52,8 @@ INSERT INTO lab1.products (type, rate, term, price) VALUES (3, 0, 3, 5000);
 
 #table
 INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('001', 2, '2021-04-11', 4000, 3);
-INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('001', 2, '2021-04-11', 4000, 3);
-INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('001', 2, '2021-04-11', 4000, 3);
+INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('001', 1, '2021-04-11', 4000, 3);
+INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('001', 3, '2021-04-11', 4000, 3);
 INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('001', 2, '2021-04-11', 6000, 4);
 INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('004', 2, '2021-04-11', 2000, 1);
 INSERT INTO lab1.purchase_info (account, productType, time, amount, duration) VALUES ('004', 2, '2021-04-11', 20000, 6);

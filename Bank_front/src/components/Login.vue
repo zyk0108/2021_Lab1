@@ -48,8 +48,8 @@
           active:'active'
         },
         rules: {
-          username: [{required: true, message: '请输入规范的用户名，5-32个字符，只包含字母数字或两种特殊字符（_、-）且只以字母或-开头.', trigger: 'blur'}],
-          password: [{required: true, message: '6-32个字符，字母、数字或特殊字符（-、_）至少包含两种，不包含账号.', trigger: 'blur'}]
+          username: [{required: true, message: 'Please input valid username', trigger: 'blur'}],
+          password: [{required: true, message: 'Please input valid password', trigger: 'blur'}]
         },
         loading: false
       }
@@ -99,7 +99,7 @@
   @import url("https://unpkg.com/element-ui/lib/theme-chalk/index.css");
 
   #base_login{
-    /*background: url("../assets/background/background.jpg") repeat;*/
+    background: url("../assets/background/login_background.jpg");
     background-position: center;
     height: 100%;
     width: 100%;

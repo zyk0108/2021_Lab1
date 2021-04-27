@@ -10,7 +10,7 @@ export default new Vuex.Store({
     loanAccount: localStorage.getItem('loanAccount') || null
   },
   mutations: {
-    setLoanAccount(state, row){
+    setLoanAccount (state, row) {
       localStorage.setItem('loanAccount', row)
       state.loanAccount = row
     },

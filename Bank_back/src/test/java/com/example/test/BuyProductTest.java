@@ -1,4 +1,4 @@
-package test.com.example.test.service;
+package com.example.test;
 
 import com.example.test.entity.AccountFlow;
 import com.example.test.entity.Record;
@@ -18,7 +18,7 @@ import static org.testng.AssertJUnit.assertEquals;
 * BuyProduct Tester.
 *
 * @author <Authors name>
-* @since <pre>Àƒ‘¬ 26, 2021</pre>
+* @since <pre>April 26, 2021</pre>
 * @version 1.0
 */
 public class BuyProductTest {
@@ -121,6 +121,8 @@ public void testBuyProduct() throws Exception {
 //TODO: Test goes here...
     int res=buyProduct.buyProduct("001",1,0,"2021.04.24",3,1);
     assertEquals(200,res);
+    res=buyProduct.buyProduct("001",1,1000,"2021.04.24",3,1);
+    assertEquals(200,res);
 }
 
 /**
@@ -150,7 +152,6 @@ public void testGetAccountFlowInfo() throws Exception {
     assertEquals("002",accountFlow.getAccount());
     assertEquals(10000,accountFlow.getAmount());
     assertEquals("2021.04.12",accountFlow.getDate());
-    assertEquals("¥Ê»Î",accountFlow.getOperation());
 }
 
 

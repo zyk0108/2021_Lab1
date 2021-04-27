@@ -81,13 +81,10 @@ public class BuyProduct {
     }
 
     /**
-     * 此处以确定可以购买，余额足够购买
-     * 需要完成：更新用户的余额（原始余额-罚金-购买花销）
-     * 添加一条还罚金的交易记录（transaction表）
-     * 添加一条购买产品的交易记录（transaction表）
-     * 添加一条购买记录（purchase_info表），方便后面查看盈亏
+     *
      * @param strDate
      * @return
+     * @throws Exception
      */
     public static Date strToDate(String strDate) throws Exception{
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
@@ -111,17 +108,17 @@ public class BuyProduct {
         int depositTemp = balance - fine - productNum * price;
         accountInfoDAOImp.updateDeposit(depositTemp, account);
 
-        int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
-        loanMapper.updateCard(balance - fine - productNum * price, customerId);
+        /*int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
+        loanMapper.updateCard(balance - fine - productNum * price, customerId);*/
         if (fine != 0) {
             TransactionDAOImp transactionDAOImp = new TransactionDAOImp();
             transactionDAOImp.addTransaction(account, date, "交罚金", fine);
 
-            List<Bill> bills = loanMapper.getBillFromCustomerCode(Integer.parseInt(account));
+            /*List<Bill> bills = loanMapper.getBillFromCustomerCode(Integer.parseInt(account));
             for (Bill bill : bills) {
                 loanService.payForFine(bill.getFine(), Integer.parseInt(account), bill.getPeriodNum(), bill.getLoan_num());
             }
-
+*/
             accountInfoDAOImp.updateFine(account);
         }
 

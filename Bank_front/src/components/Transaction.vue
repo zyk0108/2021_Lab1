@@ -72,7 +72,10 @@
         <!--实现导航栏的默认开关-->
         <el-menu :default-openeds="['3','4']"><!--:default-openeds="['1','3']"-->
           <el-submenu index="1">
-            <template slot="title"><i class="el-icon-menu" @click="leadToRepay1"></i>柜面还款</template>
+            <template slot="title"><i class="el-icon-menu" ></i>柜面还款</template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1" @click="leadToRepay1()">还款</el-menu-item>
+            </el-menu-item-group>
             <el-menu-item-group>
               <!--<el-menu-item index="1-1">1</el-menu-item>
               <el-menu-item index="1-2">2</el-menu-item>
@@ -81,7 +84,10 @@
           </el-submenu>
 
           <el-submenu index="2">
-            <template slot="title"><i class="el-icon-menu" @click="leadToRepay2"></i>自动还款</template>
+            <template slot="title"><i class="el-icon-menu"></i>自动还款</template>
+            <el-menu-item-group>
+              <el-menu-item index="2-1" @click="leadToRepay2()">还款</el-menu-item>
+            </el-menu-item-group>
           </el-submenu>
 
           <el-submenu index="3">
@@ -206,12 +212,12 @@
               <el-table-column
                 prop="amount"
                 label="涉及的金额"
-                :filters="[{ text: '金额大于1000', value: 1000 }]"
+                :filters="[{ text: '金额大于10000', value: 10000 }]"
                 :filter-method="filterTag"
                 filter-placement="bottom-end">
                 <template slot-scope="scope">
                   <el-tag
-                    :type="scope.row.amount > 1000 ? 'primary' : 'success'"
+                    :type="scope.row.amount > 10000 ? 'primary' : 'success'"
                     disable-transitions>{{scope.row.amount}}</el-tag>
                 </template>
               </el-table-column>
