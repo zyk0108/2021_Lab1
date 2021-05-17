@@ -38,7 +38,7 @@ remainAmount DOUBLE
 );
 
 insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
-(0,0,'test0',2020000,10000,'2021-04-10','2020-04-20','month',250,1,1,'loan');
+(0,0,'test0',2020000,10000,'2021-04-10','2020-04-20','month',250,2,1,'loan');
 insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
 (1,1,'test1',2020001,10000,'2021-04-10','2021-04-30','month',0,1,1,'loan');
 insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
@@ -79,7 +79,9 @@ insert into card (cardID, customerID, remainAmount) VALUES
 (9,2020009,30000);
 
 insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
-(0,0,0,1,10000,10000,'2020-04-20','no',250,'no','no');
+(0,0,0,1,5000,5000,'2020-04-30','yes',0,'yes','no');
+insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
+(0,0,0,2,5000,5000,'2020-04-20','no',250,'no','no');
 insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
 (1,1,1,1,10000,10000,'2021-04-30','no',0,'no','no');
 insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
