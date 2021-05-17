@@ -38,6 +38,8 @@ remainAmount DOUBLE
 );
 
 insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
+(0,0,'test0',2020000,10000,'2021-04-10','2020-04-20','month',250,1,1,'loan');
+insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
 (1,1,'test1',2020001,10000,'2021-04-10','2021-04-30','month',0,1,1,'loan');
 insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
 (2,2,'test2',2020002,10000,'2021-04-10','2021-04-30','month',0,1,1,'loan');
@@ -55,6 +57,8 @@ insert into loan_account (loan_num, customerCode, customerName, customerId, tota
 (8,8,'test8',2020008,10000,'2021-04-10','2021-04-30','month',250,2,2,'loan');
 insert into loan_account (loan_num, customerCode, customerName, customerId, totalLoanAmount, createTime, dueTime, type, fine, totalPeriodNum, thisPeriodNum, result) VALUES
 (9,9,'test9',2020009,20000,'2021-04-20','2021-05-10','month',0,2,1,'loan');
+insert into card (cardID, customerID, remainAmount) VALUES
+(0,2020000,20000);
 insert into card (cardID, customerID, remainAmount) VALUES
 (1,2020001,566000);
 insert into card (cardID, customerID, remainAmount) VALUES
@@ -74,6 +78,8 @@ insert into card (cardID, customerID, remainAmount) VALUES
 insert into card (cardID, customerID, remainAmount) VALUES
 (9,2020009,30000);
 
+insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
+(0,0,0,1,10000,10000,'2020-04-20','no',250,'no','no');
 insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES
 (1,1,1,1,10000,10000,'2021-04-30','no',0,'no','no');
 insert into bill (loan_num, customerCode, cardID, periodNum, LoanAmount, remainingForPay, dueTime, overdue, fine, alreadyFine, alreadyPay) VALUES

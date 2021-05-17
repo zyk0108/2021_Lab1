@@ -22,6 +22,11 @@ public class BuyProduct {
     @Autowired
     private LoanService loanService;
 
+    public BuyProduct(LoanMapper mapper,LoanService service){
+        this.loanMapper = mapper;
+        this.loanService = service;
+    }
+
     public Map<String, Object> getAccountGrade(String account) {
         Map<String, Object> result = new HashMap<>();
         AccountInfoDAOImp accountInfoDAOImp = new AccountInfoDAOImp();
@@ -95,12 +100,17 @@ public class BuyProduct {
         int depositTemp = balance - fine - productNum * price;
         accountInfoDAOImp.updateDeposit(depositTemp, account);
 
-        //int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
-        //loanMapper.updateCard(balance - fine - productNum * price, customerId);
+        int customerId = loanMapper.getCustomerIdFromCustomerCode(Integer.parseInt(account));
+        loanMapper.updateCard(balance - fine - productNum * price, customerId);
         if (fine != 0) {
-            TransactionDAOImp transactionDAOImp = new TransactionDAOImp();
-            transactionDAOImp.addTransaction(account, date, "交罚金", fine);
             accountInfoDAOImp.updateFine(account);
+            List<Bill> bills = loanMapper.getBillFromCustomerCode(Integer.parseInt(account));
+            for(Bill bill : bills){
+                if(bill.getAlreadyFine().equals("no")){
+                    System.out.println("ok");
+                    loanService.payForFine(fine,Integer.parseInt(account),bill.getPeriodNum(), bill.getLoan_num());
+                }
+            }
         }
         int amountTemp = price * productNum;
         TransactionDAOImp transactionDAOImp = new TransactionDAOImp();

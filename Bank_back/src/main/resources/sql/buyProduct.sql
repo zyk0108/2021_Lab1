@@ -39,6 +39,7 @@ create table if not exists lab1.transaction
 
 # 初始化数据表
 # insert
+INSERT INTO lab1.accountinfo (accountNum, loan, deposit, fine) VALUES ('0', 10000, 20000, 250);
 INSERT INTO lab1.accountinfo (accountNum, loan, deposit, fine) VALUES ('1', 10000, 566000, 0);
 INSERT INTO lab1.accountinfo (accountNum, loan, deposit, fine) VALUES ('2', 10000, 20000, 0);
 INSERT INTO lab1.accountinfo (accountNum, loan, deposit, fine) VALUES ('3', 50000, 30000, 0);

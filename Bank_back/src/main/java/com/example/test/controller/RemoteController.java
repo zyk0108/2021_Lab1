@@ -20,14 +20,15 @@ import java.util.Map;
 @RestController
 public class RemoteController {
 
-    static BuyProduct buyProduct=new BuyProduct();
+    private BuyProduct buyProduct;
 
     //自动注入RestTemplate
     private final RestTemplate restTemplate;
 
     @Autowired
-    public RemoteController(RestTemplate restTemplate) {
+    public RemoteController(RestTemplate restTemplate,BuyProduct buyProduct) {
         this.restTemplate = restTemplate;
+        this.buyProduct = buyProduct;
     }
 
     //实现登录功能

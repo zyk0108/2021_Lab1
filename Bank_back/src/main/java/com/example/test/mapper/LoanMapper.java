@@ -68,7 +68,7 @@ public interface LoanMapper {
     @Update("update accountinfo set fine = #{fine} where accountNum = #{accountNum}")
     void updateFineForAccountInfo(@Param("fine")int fine, @Param("accountNum")String accountNum);
 
-    @Update("update accountinfo set fine = #{fine}, loan = #{loan}, deposit = #{deposit}")
+    @Update("update accountinfo set fine = #{fine}, loan = #{loan}, deposit = #{deposit} where accountNum = #{accountNum}")
     void updateAccountInfo(AccountInfo accountInfo);
 
 }
